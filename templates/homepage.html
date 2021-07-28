@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang=en>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+    .header {
+        background-color: #1a1a1a;
+        display: flex;
+        justify-content: space-between;
+        height:66px;
+    }
+
+
+    .searchbar img{
+        height: 80%
+    }
+    .searchbar input{
+        height: 60%;
+        border-radius: 10px;
+    }
+    .body {
+        background-color: cyan;
+        color: white;
+    }
+
+    .middle {
+        display: flex;
+        justify-content: space-between;
+    }
+    .feeds {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .react{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .user_info{
+        width: 20vw;
+        color: white;
+    }
+    .feed{
+        border: none;
+        display: flex;
+        flex-direction: column;
+        width: 50vw;
+        margin-top: 15px;
+        border-radius: 7px;
+        color: white;
+        background-color: #1a1a1a;
+        box-shadow: 0px 5px 7px -7px rgba(0,0,0,0.75);
+    }
+
+    .feed h3 {
+        margin: 5px;
+    }
+
+    .feed h6 {
+        margin: 0px;
+        border-bottom: 1px solid gray;
+        padding-bottom: 5px;
+    }
+
+    .feed button {
+        border: none;
+        color: white;
+        background
+        cursor: pointer;
+        border-radius: 30px;
+    }
+
+    .feed p {
+        border-bottom: 0.5px solid gray;
+        padding-bottom: 10px;
+    }
+
+    .fa {
+        font-size: 20px;
+        user-select: none;
+        color: #313632;
+    }
+
+    .feed button:hover {
+        color: #4d4d4d;
+        cursor: pointer;
+    }
+
+    .onlineuser {
+        color: white;
+        display: flex;
+        flex-direction: column;
+        width: 20vw;
+    }
+
+    .post_new_feed {
+        border: none;
+        color: green;
+        text-decoration-line: none;
+        margin-top: 5px;
+        margin-left: 25vw;
+        font-size: 30px;
+        width: 30vw;
+    }
+
+    .chat_user {
+        border-color: gray;
+        border-right: none;
+        background: black;
+        color: white;
+        font-size: 30px;
+        margin: 10px;
+        cursor: pointer;
+    }
+
+    .chat_user:hover {
+        color: #3399ff;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Social Web </title>
+</head>
+
+<body bgcolor='black'>
+    <div class="header">
+        <div class='searchbar'>
+            <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7DwWPn8OCCaf6hGf4oAfGhXmHkcQAzulUOSFdiVatLlWnuK-z1k-tgKW4naf4Ql2Dqu4&usqp=CAU' />
+            <input type='search'>
+        </div>
+        <a href="homepage"><img src="https://happyparty.vn/wp-content/uploads/2019/05/home-icon-png-white-4.png" height=50 width=50/></a>
+        <a href="message"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB-mlGxGrhjApezLzxrjE6e7otdj9Axp379r667C1Rvn0-6RovzSD5Q7Qr6XmKCBQnf8Y&usqp=CAU" height=50 width=50/></a>
+        <a href=""><img src="https://i.pinimg.com/474x/98/31/a8/9831a87a7f2d3ca32e64a15b1f20cbcf.jpg" height=50 width=50/></a>
+
+        {% if user.is_authenticated %}
+        <h4 style='color:white'>Hello, {{user.first_name}}</h4>
+        <p><a href='/' style='color:white; text-decoration: none; font-size: 20px;'>Log out</a></p>
+
+        {% endif %}
+    </div>
+    
+    <button class='post_new_feed'><a href='newfeed'>Hey {{user.first_name}}, what are you thinking?</a></button>
+    <div class='middle'>
+        <div class='user_info'>         
+        </div>
+        <div class="feeds">
+            
+            {% for feed in feeds %}
+            <div class='feed'>
+            <h3> {{feed.user}} </h3>
+            <h6> {{feed.date}} </h6>
+            <p> {{feed.feed}} </p>
+            <form action="{% url 'likepost' %}" method='POST' class="ui form">
+                {%csrf_token%}
+                <input type="hidden" name='feed_id' value="{{ feed.id }}">
+                
+                <button type="submit"><i class="fa fa-thumbs-up">Like</i></button>
+                <strong padding-left="10px"> {{feed.like}} </strong>
+            </form>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="onlineuser">
+            <h1>Some user you may know</h1>
+            {%for user in users %}
+            
+            <form method="POST" action="message">
+                {% csrf_token %}
+                <input class='chat_user' type="submit" value={{user}} />
+            </form>
+            {%endfor%}
+        </div>
+    </div>
+</body>
+
+</html>
